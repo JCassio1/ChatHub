@@ -28,4 +28,8 @@ Chat page
 
 Wireframes might differ from final result
 
+## 🗺 Project Management
+
+ClickUp is used to manage implementation of project features (Kanban)
+
 Made with ❤️ by Joselson and sleepless nights
