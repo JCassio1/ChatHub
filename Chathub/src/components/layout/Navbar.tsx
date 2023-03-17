@@ -1,5 +1,3 @@
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
-
 const Navbar = () => {
   interface MenuItems {
     title: string
@@ -11,8 +9,8 @@ const Navbar = () => {
     { title: 'Features', titleLink: '/' }
   ]
 
-  const MenuItemMap: JSX.Element[] = menuItemsArray.map((item) => (
-    <li>
+  const MenuItemMap: JSX.Element[] = menuItemsArray.map((item: MenuItems, index: number) => (
+    <li key={index}>
       <a className='text-gray-500 transition hover:text-gray-500/75' href={item.titleLink}>
         {item.title}
       </a>
