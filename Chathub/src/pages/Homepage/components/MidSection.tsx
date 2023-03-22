@@ -12,11 +12,15 @@ const MidSection = () => {
           </div>
 
           <div className='lg:py-24'>
-            <h1 className='bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl'>
-              Keep people you love within arm's length.
+            <h1 className='text-white bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl'>
+              Keep people you love within{' '}
+              <span className='bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl'>
+                {' '}
+                arm's length.
+              </span>
             </h1>
 
-            <p className='mt-4 text-white'>
+            <p className='mt-4 text-gray-400'>
               Connecting with loved ones has never been more important, and our chat application makes it easier than
               ever to stay in touch. Whether you're across the room or across the world, our platform allows you to keep
               those you care about within arm's length.

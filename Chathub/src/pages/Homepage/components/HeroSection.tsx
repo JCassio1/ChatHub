@@ -11,7 +11,7 @@ const HeroSection = () => {
           </h1>
 
           <p
-            className='mx-auto mt-4 max-w-xl sm:text-xl sm:leading-relaxed'
+            className='mx-auto text-gray-400 mt-4 max-w-xl sm:text-xl sm:leading-relaxed'
             style={{ marginTop: '45px', marginBottom: '45px' }}
           >
             ChatHub is the perfect app for simplifying your communication and staying connected with the people who
