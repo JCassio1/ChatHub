@@ -4,9 +4,10 @@ interface featureItem {
   svgPath: string
   svgColor: string
   viewBox: string
+  textColor: string
 }
 
-const FeatureItem = ({ itemColor, itemText, svgPath, svgColor, viewBox }: featureItem) => {
+const FeatureItem = ({ itemColor, itemText, svgPath, svgColor, viewBox, textColor }: featureItem) => {
   return (
     <div
       className={`${itemColor} p-8 rounded-xl h-full flex flex-col justify-around group-hover:bg-opacity-10 transition duration-500`}
@@ -21,7 +22,7 @@ const FeatureItem = ({ itemColor, itemText, svgPath, svgColor, viewBox }: featur
         <path fill={svgColor} d={svgPath} />
       </svg>
       <div>
-        <p className='mt-4 text-xl xl:text-2xl font-semibold text-white leading-6'>{itemText}</p>
+        <p className={`mt-4 text-xl xl:text-2xl font-semibold ${textColor} leading-6`}>{itemText}</p>
       </div>
     </div>
   )
