@@ -5,12 +5,21 @@ interface featureItem {
   svgColor: string
   viewBox: string
   textColor: string
+  additionalClasses: string
 }
 
-const FeatureItem = ({ itemColor, itemText, svgPath, svgColor, viewBox, textColor }: featureItem) => {
+const FeatureItem = ({
+  itemColor,
+  itemText,
+  svgPath,
+  svgColor,
+  viewBox,
+  textColor,
+  additionalClasses
+}: featureItem) => {
   return (
     <div
-      className={`${itemColor} p-8 rounded-xl h-full flex flex-col justify-around group-hover:bg-opacity-10 transition duration-500`}
+      className={`${itemColor} ${additionalClasses} p-8 rounded-xl h-full flex flex-col justify-around group-hover:bg-opacity-10 transition duration-500`}
     >
       <svg
         className='h-8 w-8 lg:h-12 lg:w-12 mb-4'
