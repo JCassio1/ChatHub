@@ -39,7 +39,7 @@ const Navbar = () => {
                 Login
               </a>
 
-              <a href='#' className='rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white'>
+              <a href='#' className='rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white'>
                 Sign up
               </a>
             </div>
