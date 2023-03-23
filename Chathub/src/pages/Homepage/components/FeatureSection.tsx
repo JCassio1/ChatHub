@@ -2,7 +2,7 @@ import FeatureItem from './FeatureItem'
 
 const FeatureSection = () => {
   return (
-    <section>
+    <section id='featureSection'>
       <div className='bg-gray-100'>
         <div className='max-w-sm lg:max-w-2xl xl:max-w-5xl py-12 px-8 mx-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8'>
           <FeatureItem

@@ -1,19 +1,23 @@
+import { Link } from 'react-scroll'
+
 const Navbar = () => {
   interface MenuItems {
     title: string
-    titleLink: string
+    domLocation: string
   }
 
-  const menuItemsArray: MenuItems[] = [
-    { title: 'Secrets', titleLink: '/' },
-    { title: 'Features', titleLink: '/' }
-  ]
+  const menuItemsArray: MenuItems[] = [{ title: 'Features', domLocation: 'featureSection' }]
 
   const MenuItemMap: JSX.Element[] = menuItemsArray.map((item: MenuItems, index: number) => (
     <li key={index}>
-      <a className='text-gray-500 transition hover:text-gray-500/75' href={item.titleLink}>
+      <Link
+        className='text-gray-500 transition hover:text-gray-500/75'
+        to={item.domLocation}
+        smooth={true}
+        duration={500}
+      >
         {item.title}
-      </a>
+      </Link>
     </li>
   ))
 
