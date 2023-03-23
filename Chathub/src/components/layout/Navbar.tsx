@@ -21,10 +21,10 @@ const Navbar = () => {
   return (
     <header aria-label='Site Header' className='bg-gray-900'>
       <div className='mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8'>
-        <a className='block text-white text-xl' href='/'>
+        <Link className='block text-white text-xl' to='/'>
           <span className='sr-only'>Home</span>
           <h1 className='font-bold'>ChatHub.</h1>
-        </a>
+        </Link>
 
         <div className='flex flex-1 items-center justify-end md:justify-between'>
           <nav aria-label='Site Nav' className='hidden md:block'>

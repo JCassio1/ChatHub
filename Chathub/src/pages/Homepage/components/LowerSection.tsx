@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import bartSimpson from '../../../assets/bartSimpson.png'
 
 const LowerSection = () => {
@@ -18,12 +19,12 @@ const LowerSection = () => {
               Simple, reliable, private messagingfor free, available all over the world.
             </p>
 
-            <a
-              href='#'
+            <Link
+              to='/'
               className='mt-8 inline-block rounded bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400'
             >
               Join Today
-            </a>
+            </Link>
           </div>
         </div>
       </div>

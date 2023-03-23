@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import CardSection from './CardSection'
 
 const HeroSection = () => {
@@ -19,12 +20,12 @@ const HeroSection = () => {
           </p>
 
           <div className='mt-8 flex flex-wrap justify-center gap-4'>
-            <a
+            <Link
               className='block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto'
-              href='/get-started'
+              to='/auth'
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       </div>
