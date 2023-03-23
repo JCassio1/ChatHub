@@ -11,7 +11,6 @@ const Homepage = () => {
     <>
       <section>
         <TopBanner bannerText="🎉 We're live - Show us some love on LinkedIn 🎊" />
-        <Navbar />
         <HeroSection />
         <BrandsSection />
         <MidSection />
