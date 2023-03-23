@@ -1,6 +1,4 @@
-interface banner {
-  bannerText: string
-}
+import { banner } from '../../Model/data-structures'
 
 const TopBanner = ({ bannerText }: banner) => {
   return (

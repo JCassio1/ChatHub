@@ -1,7 +1,4 @@
-interface CardProps {
-  cardTitle: string
-  cardSubheading: string
-}
+import { CardProps } from '../../Model/data-structures'
 
 const UICard = ({ cardTitle, cardSubheading }: CardProps): JSX.Element => {
   return (

@@ -1,11 +1,7 @@
 import { Link } from 'react-scroll'
+import { MenuItems } from '../../Model/data-structures'
 
 const Navbar = () => {
-  interface MenuItems {
-    title: string
-    domLocation: string
-  }
-
   const menuItemsArray: MenuItems[] = [{ title: 'Features', domLocation: 'featureSection' }]
 
   const MenuItemMap: JSX.Element[] = menuItemsArray.map((item: MenuItems, index: number) => (

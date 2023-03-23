@@ -1,12 +1,4 @@
-interface featureItem {
-  itemColor: string
-  itemText: string
-  svgPath: string
-  svgColor: string
-  viewBox: string
-  textColor: string
-  additionalClasses: string
-}
+import { featureItem } from '../../../Model/data-structures'
 
 const FeatureItem = ({
   itemColor,
