@@ -1,4 +1,3 @@
-import Navbar from '../../components/layout/Navbar'
 import TopBanner from '../../components/ui/TopBanner'
 import BrandsSection from './components/BrandsSection'
 import FeatureSection from './components/FeatureSection'
