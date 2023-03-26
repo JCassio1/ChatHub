@@ -6,7 +6,7 @@ import { getAnalytics } from 'firebase/analytics'
 
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
 
-import { getAuth } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -17,19 +17,19 @@ import { getAuth } from 'firebase/auth'
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCTDFd0SAO9oAkzhwG5sR5FJMWZHTVAtbY',
+  apiKey: import.meta.env.VITE_apiKey,
 
-  authDomain: 'chathub-d709a.firebaseapp.com',
+  authDomain: import.meta.env.VITE_authDomain,
 
-  projectId: 'chathub-d709a',
+  projectId: import.meta.env.VITE_projectId,
 
-  storageBucket: 'chathub-d709a.appspot.com',
+  storageBucket: import.meta.env.VITE_storageBucket,
 
-  messagingSenderId: '223745415158',
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
 
-  appId: '1:223745415158:web:0f7e170e4d95e0cfdb59d7',
+  appId: import.meta.env.VITE_APP_appId,
 
-  measurementId: 'G-ZWMPGREBN7'
+  measurementId: import.meta.env.VITE_measurementId
 }
 
 // Initialize Firebase
@@ -41,3 +41,5 @@ export const analytics = getAnalytics(app)
 export const firestore = getFirestore(app)
 
 export const auth = getAuth(app)
+
+export const googleProvider = new GoogleAuthProvider()

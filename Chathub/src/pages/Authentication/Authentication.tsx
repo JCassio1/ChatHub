@@ -1,29 +1,66 @@
-import { auth } from '../../config/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { userCredentials } from '../../Model/data-structures'
 
-type userCredentials = string | null
+import { useAuth } from '../../hooks/AuthContext'
+
+import Cookies from 'universal-cookie'
+import { useNavigate } from 'react-router-dom'
+const cookies = new Cookies()
 
 const Authentication = () => {
   const [email, setEmail] = useState<userCredentials>(null)
   const [password, setPassword] = useState<userCredentials>(null)
 
-  const handleSignIn = async () => {
+  const { createAccount, signInWithGoogle, signInWithFirebase, currentUser } = useAuth()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (currentUser === null) {
+      return
+    }
+
+    navigate('/', { replace: true })
+  }, [currentUser])
+
+  // const handleCreateAccount = () => {
+  //   if (email && password) {
+  //     try {
+  //       createAccount(email, password)
+  //     } catch (e) {
+  //       console.error(e)
+  //     }
+  //   }
+  // }
+
+  const handleSignIn = () => {
     if (email && password) {
-      await createUserWithEmailAndPassword(auth, email, password)
+      try {
+        signInWithFirebase(email, password)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
+  const handleSignInWithGoogleFirebase = () => {
+    try {
+      signInWithGoogle()
+    } catch (error) {
+      console.error(error)
     }
   }
 
   return (
-    <section>
-      <div className='mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8'>
+    <section className='bg-gray-900 min-h-screen'>
+      <div className=' mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8'>
         <div className='mx-auto max-w-lg'>
           <h1 className='text-center text-2xl font-bold text-indigo-600 sm:text-3xl'>Start texting right away! 😝</h1>
 
           <p className='mx-auto mt-4 max-w-md text-center text-gray-500'>Sign In or Create a new account</p>
 
-          <form action='' className='mt-6 mb-0 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8'>
-            <p className='text-center text-lg font-medium'>Sign in to your account</p>
+          <form action='' className='mt-6 mb-0 space-y-4 p-4 sm:p-6 lg:p-8'>
+            <p className='text-center text-white text-lg font-medium'>Sign in to your account</p>
 
             <div>
               <label className='sr-only'>Email</label>
@@ -101,6 +138,7 @@ const Authentication = () => {
             <button
               type='button'
               className='py-2 px-4 max-w-md flex justify-center items-center bg-red-600 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md rounded-lg'
+              onClick={handleSignInWithGoogleFirebase}
             >
               <svg
                 width='20'
@@ -114,7 +152,6 @@ const Authentication = () => {
               </svg>
               Sign in with Google
             </button>
-
             <p className='text-center text-sm text-gray-500'>
               No account?
               <div className='underline'>Sign up</div>

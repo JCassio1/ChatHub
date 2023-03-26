@@ -21,3 +21,9 @@ export interface featureItem {
   textColor: string
   additionalClasses: string
 }
+
+export type userCredentials = string | null
+
+export interface Props {
+  children?: React.ReactNode
+}
