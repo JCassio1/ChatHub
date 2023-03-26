@@ -27,3 +27,11 @@ export type userCredentials = string | null
 export interface Props {
   children?: React.ReactNode
 }
+
+export interface UITextFieldType {
+  labelTitle?: string
+  fieldType?: string
+  fieldPlaceholder?: string
+  handleOnChange: React.ChangeEventHandler<HTMLInputElement>
+  svgElement?: React.ReactNode
+}
