@@ -9,12 +9,20 @@ import {
 import { auth, googleProvider } from '../config/firebase'
 import { Props } from '../Model/data-structures'
 
-export const AuthContext = React.createContext({
-  currentUser: null as User | null | undefined,
-  createAccount: (email: string, password: string) => Promise<UserCredential>,
-  signInWithFirebase: (email: string, password: string) => Promise<UserCredential>,
-  signInWithGoogle: () => Promise<UserCredential>,
-  logoutWithFirebase: () => Promise<void>
+type Context = {
+  currentUser: User | null
+  createAccount: (email: string, password: string) => null | ReturnType<typeof createUserWithEmailAndPassword>
+  signInWithFirebase: (email: string, password: string) => null | ReturnType<typeof signInWithEmailAndPassword>
+  signInWithGoogle: () => null | ReturnType<typeof signInWithEmailAndPassword>
+  logoutWithFirebase: () => null | ReturnType<typeof auth.signOut>
+}
+
+export const AuthContext = React.createContext<Context>({
+  currentUser: null,
+  createAccount: () => null,
+  signInWithFirebase: () => null,
+  signInWithGoogle: () => null,
+  logoutWithFirebase: () => null
 })
 
 export function useAuth() {
@@ -22,7 +30,7 @@ export function useAuth() {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>()
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   const createAccount = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
