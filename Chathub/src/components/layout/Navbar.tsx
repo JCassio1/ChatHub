@@ -33,13 +33,13 @@ const Navbar = () => {
 
           <div className='flex items-center gap-4'>
             <div className='sm:flex sm:gap-4'>
-              <Link to='auth'>
+              <Link to='/auth?mode=login'>
                 <div className='block rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black hover:text-white transition hover:bg-blue-600'>
                   Login
                 </div>
               </Link>
 
-              <Link to='auth'>
+              <Link to='/auth?mode=signup'>
                 <div className='block rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white'>Sign up</div>
               </Link>
             </div>
