@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import UITextField from '../../components/ui/UITextField'
 import { validateEmail } from '../../utils/helpers'
+import UILoadingSpinner from '../../components/ui/UILoadingSpinner'
 const cookies = new Cookies()
 
 const Authentication = () => {
@@ -14,8 +15,9 @@ const Authentication = () => {
   const isLogin = searchParams.get('mode') === 'login'
 
   const [email, setEmail] = useState<userCredentials>(null)
-  const [password, setPassword] = useState<userCredentials>(null)
+  const [password, setPassword] = useState<string>()
   const [retypedPassword, setRetypedPassword] = useState<userCredentials>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { createAccount, signInWithGoogle, signInWithFirebase, currentUser } = useAuth()
 
@@ -29,25 +31,32 @@ const Authentication = () => {
     navigate('/', { replace: true })
   }, [currentUser])
 
-  // const handleCreateAccount = () => {
-  //   if (email && (password === retypedPassword)) {
-  //     try {
-  //       createAccount(email, password)
-  //     } catch (e) {
-  //       console.error(e)
-  //     }
-  //   }
-  // }
+  const handleCreateAccount = async () => {
+    if (email && password && password === retypedPassword) {
+      setIsLoading(true)
+      try {
+        await createAccount(email, password)
+        setIsLoading(false)
+      } catch (e) {
+        setIsLoading(false)
+        console.error(e)
+      }
+    }
+  }
 
   const handleSignIn = () => {
     if (email && password) {
+      setIsLoading(true)
       if (validateEmail(email)) {
         try {
           signInWithFirebase(email, password)
+          setIsLoading(false)
         } catch (e) {
+          setIsLoading(false)
           console.error(e)
         }
       } else {
+        setIsLoading(false)
         console.log('Not valid email.')
       }
     }
@@ -55,11 +64,16 @@ const Authentication = () => {
 
   const handleSignInWithGoogleFirebase = () => {
     try {
+      setIsLoading(true)
       signInWithGoogle()
     } catch (error) {
+      setIsLoading(false)
       console.error(error)
     }
   }
+
+  const authenticationType = isLogin ? handleSignIn : handleCreateAccount
+  const socialAuthenticationType = handleSignInWithGoogleFirebase
 
   return (
     <section className='bg-gray-900 min-h-screen'>
@@ -158,15 +172,17 @@ const Authentication = () => {
 
             <button
               type='button'
-              onClick={handleSignIn}
+              onClick={authenticationType}
               className='block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white'
+              disabled={isLoading}
             >
               {isLogin ? 'Sign in' : 'Create Account'}
             </button>
             <button
               type='button'
               className='py-2 px-4 max-w-md flex justify-center items-center bg-red-600 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md rounded-lg'
-              onClick={handleSignInWithGoogleFirebase}
+              onClick={socialAuthenticationType}
+              disabled={isLoading}
             >
               <svg
                 width='20'
@@ -178,13 +194,14 @@ const Authentication = () => {
               >
                 <path d='M896 786h725q12 67 12 128 0 217-91 387.5t-259.5 266.5-386.5 96q-157 0-299-60.5t-245-163.5-163.5-245-60.5-299 60.5-299 163.5-245 245-163.5 299-60.5q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65t-173.5 176.5-64 243.5 64 243.5 173.5 176.5 238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78h-436v-264z'></path>
               </svg>
-              {isLogin ? 'Continue with Google' : 'Create account with Google'}
+              {'Continue with Google'}
             </button>
+            <div className='flex justify-center items-center'>{isLoading && <UILoadingSpinner />}</div>
             <Link to={`/auth?mode=${isLogin ? 'signup' : 'login'}`}>
-              <p className='text-center pt-7 text-sm text-gray-500'>
+              <div className='text-center pt-7 text-sm text-gray-500'>
                 {isLogin ? 'No account?' : 'Already have an account?'}
-                <div className='underline'>{isLogin ? 'Sign up?' : 'Login'}</div>
-              </p>
+                <p className='underline'>{isLogin ? 'Sign up?' : 'Login'}</p>
+              </div>
             </Link>
           </form>
         </div>
