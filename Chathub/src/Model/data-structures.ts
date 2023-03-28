@@ -35,3 +35,8 @@ export interface UITextFieldType {
   handleOnChange: React.ChangeEventHandler<HTMLInputElement>
   svgElement?: React.ReactNode
 }
+
+export interface alertBanner {
+  alertTitle: string
+  alertMessage: string
+}

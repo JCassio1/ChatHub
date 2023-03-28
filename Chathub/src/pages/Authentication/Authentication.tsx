@@ -8,6 +8,7 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import UITextField from '../../components/ui/UITextField'
 import { validateEmail } from '../../utils/helpers'
 import UILoadingSpinner from '../../components/ui/UILoadingSpinner'
+import UIAlertBanner from '../../components/ui/UIAlertBanner'
 const cookies = new Cookies()
 
 const Authentication = () => {
@@ -18,6 +19,14 @@ const Authentication = () => {
   const [password, setPassword] = useState<string>()
   const [retypedPassword, setRetypedPassword] = useState<userCredentials>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+
+  const alertInitialState = {
+    isError: false,
+    errorTitle: '',
+    errorMessage: ''
+  }
+  const [errorAlert, setErrorAlert] = useState(alertInitialState)
 
   const { createAccount, signInWithGoogle, signInWithFirebase, currentUser } = useAuth()
 
@@ -31,6 +40,12 @@ const Authentication = () => {
     navigate('/', { replace: true })
   }, [currentUser])
 
+  const clearAlert = () => {
+    setTimeout(() => {
+      setErrorAlert(alertInitialState)
+    }, 6000)
+  }
+
   const handleCreateAccount = async () => {
     if (email && password && password === retypedPassword) {
       setIsLoading(true)
@@ -39,7 +54,12 @@ const Authentication = () => {
         setIsLoading(false)
       } catch (e) {
         setIsLoading(false)
-        console.error(e)
+        setErrorAlert(() => ({
+          errorTitle: 'Error! ',
+          errorMessage: 'Not able to create an account for you. Please try again later.',
+          isError: true
+        }))
+        clearAlert()
       }
     }
   }
@@ -53,11 +73,21 @@ const Authentication = () => {
           setIsLoading(false)
         } catch (e) {
           setIsLoading(false)
-          console.error(e)
+          setErrorAlert(() => ({
+            errorTitle: 'Error! ',
+            errorMessage: 'Not able to sign you in. Please try again later.',
+            isError: true
+          }))
+          clearAlert()
         }
       } else {
         setIsLoading(false)
-        console.log('Not valid email.')
+        setErrorAlert(() => ({
+          errorTitle: 'Error! ',
+          errorMessage: 'Email is not valid',
+          isError: true
+        }))
+        clearAlert()
       }
     }
   }
@@ -68,7 +98,12 @@ const Authentication = () => {
       signInWithGoogle()
     } catch (error) {
       setIsLoading(false)
-      console.error(error)
+      setErrorAlert(() => ({
+        errorTitle: 'Error! ',
+        errorMessage: 'Not able to continue with Google. Please try again later.',
+        isError: true
+      }))
+      clearAlert()
     }
   }
 
@@ -79,6 +114,11 @@ const Authentication = () => {
     <section className='bg-gray-900 min-h-screen'>
       <div className=' mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8'>
         <div className='mx-auto max-w-lg'>
+          <div className='my-3'>
+            {errorAlert.isError && (
+              <UIAlertBanner alertTitle={errorAlert.errorTitle} alertMessage={errorAlert.errorMessage} />
+            )}
+          </div>
           <h1 className='text-center text-2xl font-bold text-indigo-600 sm:text-3xl'>Start texting right away! 😝</h1>
 
           <p className='mx-auto mt-4 max-w-md text-center text-gray-500'>Sign In or Create a new account</p>
