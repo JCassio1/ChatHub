@@ -4,6 +4,7 @@ import Authentication from './pages/Authentication/Authentication'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import RootLayout from './pages/PageLayout/RootLayout'
 import { AuthProvider } from './hooks/AuthContext'
+import ChatRoom from './pages/Chat/ChatRoom'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/auth',
         element: <Authentication />
+      },
+      {
+        path: '/chats/:id',
+        element: <ChatRoom />
       }
     ]
   }
