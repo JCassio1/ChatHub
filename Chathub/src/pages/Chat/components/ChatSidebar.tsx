@@ -24,7 +24,7 @@ const ChatSidebar = () => {
               alt='avatar'
             />
             <div>
-              <h3 className='text-gray-900 font-bold'>The fellas</h3>
+              <h3 className='text-gray-900 font-bold'>The fellas 💪🏾🔥</h3>
               <p className='text-gray-600'>What are you up to this weekend?</p>
             </div>
           </div>
