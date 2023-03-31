@@ -38,6 +38,18 @@ const ChatConversations = () => {
           </div>
         </div>
       </div>
+      <div className='bottom-2 fixed z-10'>
+        <form className='flex items-center mt-4 px-0 mx-0'>
+          <input
+            className='flex-1 rounded-full py-2 px-4 border-gray-400 border mr-4 w-full'
+            type='text'
+            placeholder='Type your message here...'
+          />
+          <button className='bg-indigo-600 text-white rounded-full py-2 px-4 hover:bg-blue-500 transition-colors'>
+            Send
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
