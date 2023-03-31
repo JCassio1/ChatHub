@@ -1,3 +1,4 @@
+import ChatConversations from './components/ChatConversations'
 import ChatSidebar from './components/ChatSidebar'
 
 const ChatRoom = () => {
@@ -5,6 +6,7 @@ const ChatRoom = () => {
     <section>
       <div className='flex flex-row h-screen'>
         <ChatSidebar />
+        <ChatConversations />
       </div>
     </section>
   )
