@@ -3,13 +3,11 @@ import { userCredentials } from '../../Model/data-structures'
 
 import { useAuth } from '../../hooks/AuthContext'
 
-import Cookies from 'universal-cookie'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import UITextField from '../../components/ui/UITextField'
 import { validateEmail } from '../../utils/helpers'
 import UILoadingSpinner from '../../components/ui/UILoadingSpinner'
 import UIAlertBanner from '../../components/ui/UIAlertBanner'
-const cookies = new Cookies()
 
 const Authentication = () => {
   const [searchParams] = useSearchParams()
@@ -36,8 +34,7 @@ const Authentication = () => {
     if (currentUser === null) {
       return
     }
-
-    navigate('/', { replace: true })
+    navigate('/view/messages', { replace: true })
   }, [currentUser])
 
   const clearAlert = () => {
