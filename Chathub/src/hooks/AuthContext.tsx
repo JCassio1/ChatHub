@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth'
 import { auth, googleProvider } from '../config/firebase'
 import { Props } from '../Model/data-structures'
+import LoadingScreen from '../components/ui/LoadingScreen'
 
 type Context = {
   currentUser: User | null
@@ -31,6 +32,7 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const createAccount = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -51,10 +53,15 @@ export const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user)
+      setLoading(false) // set loading to false once user is defined
     })
 
     return unsubscribe
   }, [])
+
+  if (loading) {
+    return <LoadingScreen />
+  }
 
   const value = {
     currentUser,

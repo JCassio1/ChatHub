@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Homepage from './pages/Homepage/Homepage'
 import Authentication from './pages/Authentication/Authentication'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import RootLayout from './pages/PageLayout/RootLayout'
 import { AuthProvider } from './hooks/AuthContext'
 import ChatRoom from './pages/Chat/ChatRoom'
+import PrivateRoute from './utils/PrivateRoute'
 
 const router = createBrowserRouter([
   {
@@ -16,12 +17,12 @@ const router = createBrowserRouter([
         element: <Homepage />
       },
       {
-        path: '/auth',
-        element: <Authentication />
+        path: '/view/messages',
+        element: <PrivateRoute element={<ChatRoom />} />
       },
       {
-        path: '/chats/:id',
-        element: <ChatRoom />
+        path: '/auth',
+        element: <Authentication />
       }
     ]
   }
