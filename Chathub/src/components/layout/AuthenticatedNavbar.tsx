@@ -15,6 +15,11 @@ const AuthenticatedNavbar = () => {
           <div className='flex items-center gap-6 text-sm' />
           <div className='flex items-center gap-4'>
             <div className='sm:flex sm:gap-4'>
+              <div className='block rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white'>
+                <Link to='/view/messages'>App</Link>
+              </div>
+            </div>
+            <div className='sm:flex sm:gap-4'>
               <div
                 onClick={logoutWithFirebase}
                 className='block rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black hover:text-white transition hover:bg-blue-600'
