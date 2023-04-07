@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 export interface MenuItems {
   title: string
   domLocation: string
@@ -39,4 +40,8 @@ export interface UITextFieldType {
 export interface alertBanner {
   alertTitle: string
   alertMessage: string
+}
+
+export interface PrivateRouteProps {
+  element: ReactNode
 }
