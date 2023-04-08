@@ -45,3 +45,12 @@ export interface alertBanner {
 export interface PrivateRouteProps {
   element: ReactNode
 }
+
+export interface UIModalProps {
+  isOpen: boolean
+  onClose: Function
+  title: string
+  body: JSX.Element
+  buttonText: string
+  handleModalClick: React.MouseEventHandler<HTMLButtonElement>
+}
