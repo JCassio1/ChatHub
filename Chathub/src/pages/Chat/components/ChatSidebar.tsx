@@ -3,15 +3,24 @@ import UIModal from '../../../components/ui/UIModal'
 
 const ChatSidebar = () => {
   const [showModal, setShowModal] = useState(false)
+  const [showNewGroupModal, setShowNewGroupModal] = useState(false)
   const insertedCode = useRef(null)
+  const insertedGroupName = useRef(null)
 
   const handleCodeInput = (event) => {
-    if (event.target.value == null || event.target.value == '') return
     insertedCode.current = event.target.value
+  }
+
+  const handleChatNameInput = (event) => {
+    insertedGroupName.current = event.target.value
   }
 
   const handleModalClick = () => {
     console.log('Add user to chat')
+  }
+
+  const handleChatCreation = () => {
+    console.log('Create new chat code')
   }
 
   return (
@@ -24,13 +33,30 @@ const ChatSidebar = () => {
         buttonText={'Join Chat'}
         handleModalClick={handleModalClick}
       />
+
+      <UIModal
+        isOpen={showNewGroupModal}
+        title={'New chat'}
+        onClose={() => setShowNewGroupModal((prev) => !prev)}
+        body={<input type='text' placeholder='Enter chat name' onChange={handleChatNameInput} />}
+        buttonText={'Create chat'}
+        handleModalClick={handleChatCreation}
+      />
+
       <div className='flex justify-center'>
         <button
           type='button'
           className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
           onClick={() => setShowModal((prev) => !prev)}
         >
-          + New Chat
+          + Join Chat
+        </button>
+        <button
+          type='button'
+          className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
+          onClick={() => setShowNewGroupModal((prev) => !prev)}
+        >
+          + Create Group
         </button>
       </div>
       <h2 className='text-lg font-bold mb-4'>Chats</h2>
