@@ -1,3 +1,4 @@
+import { DocumentData, QueryDocumentSnapshot, SnapshotOptions, Timestamp } from 'firebase/firestore'
 import { ReactNode } from 'react'
 export interface MenuItems {
   title: string
@@ -54,3 +55,33 @@ export interface UIModalProps {
   buttonText: string
   handleModalClick: React.MouseEventHandler<HTMLButtonElement>
 }
+
+export interface textBubbleProps {
+  message: string
+}
+
+export interface receiveTextBubbleProps {
+  message: string
+  avatarUrl: string
+  senderName: string
+}
+
+export interface textMessagesProps {
+  avatarUrl: string
+  createdAt: Timestamp
+  room: string
+  text: string
+  user: string
+  userDisplayName: string
+}
+
+interface textMessagesPropsRead {
+  avatarUrl?: string
+  createdAt?: Timestamp
+  room?: string
+  text?: string
+  user?: string
+  userDisplayName?: string
+}
+
+export type snapshotMessageProps = textMessagesProps & { id: string }
