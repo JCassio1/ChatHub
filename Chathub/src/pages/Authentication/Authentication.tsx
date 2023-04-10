@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/AuthContext'
 
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import UITextField from '../../components/ui/UITextField'
-import { validateEmail } from '../../utils/helpers'
+import { getRandomAvatarUrl, validateEmail } from '../../utils/helpers'
 import UILoadingSpinner from '../../components/ui/UILoadingSpinner'
 import UIAlertBanner from '../../components/ui/UIAlertBanner'
 
@@ -14,10 +14,11 @@ const Authentication = () => {
   const isLogin = searchParams.get('mode') === 'login'
 
   const [email, setEmail] = useState<userCredentials>(null)
+  const [newUserName, setNewUserName] = useState<userCredentials>(null)
   const [password, setPassword] = useState<string>()
   const [retypedPassword, setRetypedPassword] = useState<userCredentials>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isError, setIsError] = useState<boolean>(false)
+  const [isAccountReady, setIsAccountReady] = useState<boolean>(false)
 
   const alertInitialState = {
     isError: false,
@@ -26,7 +27,7 @@ const Authentication = () => {
   }
   const [errorAlert, setErrorAlert] = useState(alertInitialState)
 
-  const { createAccount, signInWithGoogle, signInWithFirebase, currentUser } = useAuth()
+  const { createAccount, signInWithGoogle, signInWithFirebase, currentUser, updateProfileWithDisplayName } = useAuth()
 
   const navigate = useNavigate()
 
@@ -35,7 +36,7 @@ const Authentication = () => {
       return
     }
     navigate('/view/messages', { replace: true })
-  }, [currentUser])
+  }, [isAccountReady])
 
   const clearAlert = () => {
     setTimeout(() => {
@@ -44,11 +45,13 @@ const Authentication = () => {
   }
 
   const handleCreateAccount = async () => {
-    if (email && password && password === retypedPassword) {
+    if (newUserName && email && password && password === retypedPassword) {
       setIsLoading(true)
       try {
-        await createAccount(email, password)
+        const userCredential = await createAccount(email, password, newUserName)
+        updateProfileWithDisplayName(userCredential.user, newUserName)
         setIsLoading(false)
+        setIsAccountReady(true)
       } catch (e) {
         setIsLoading(false)
         setErrorAlert(() => ({
@@ -58,6 +61,14 @@ const Authentication = () => {
         }))
         clearAlert()
       }
+    } else {
+      setIsLoading(false)
+      setErrorAlert(() => ({
+        errorTitle: 'Error! ',
+        errorMessage: 'Please double check that all fields in the form are valid and try again.',
+        isError: true
+      }))
+      clearAlert()
     }
   }
 
@@ -124,6 +135,36 @@ const Authentication = () => {
             <p className='text-center text-white text-lg font-medium'>
               {isLogin ? 'Sign in to your account right away' : 'Create your account today'}
             </p>
+
+            {!isLogin && (
+              <UITextField
+                labelTitle='Username'
+                fieldPlaceholder='Type your name'
+                handleOnChange={(e) => setNewUserName(e.target.value)}
+                svgElement={
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-4 w-4 text-gray-400'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+                    />
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
+                    />
+                  </svg>
+                }
+              />
+            )}
 
             <UITextField
               labelTitle='Email'
