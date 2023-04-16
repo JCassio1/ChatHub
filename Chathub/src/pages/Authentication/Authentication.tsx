@@ -36,7 +36,7 @@ const Authentication = () => {
       return
     }
     navigate('/view/messages', { replace: true })
-  }, [isAccountReady])
+  }, [isAccountReady, currentUser])
 
   const clearAlert = () => {
     setTimeout(() => {
