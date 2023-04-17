@@ -7,6 +7,7 @@ import { snapshotMessageProps, textMessagesProps } from '../../../Model/data-str
 
 const ChatConversations = ({ room }) => {
   const messageInputRef = useRef<HTMLInputElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   const [messages, setMessages] = useState<snapshotMessageProps[]>([])
 
@@ -25,6 +26,12 @@ const ChatConversations = ({ room }) => {
         })
       })
       setMessages(messages)
+
+      // scroll to the bottom of the messages container
+      messagesContainerRef.current?.scrollTo({
+        top: messagesContainerRef.current?.scrollHeight,
+        behavior: 'smooth'
+      })
     })
 
     return () => unsubscribe()
@@ -57,7 +64,7 @@ const ChatConversations = ({ room }) => {
       <div className='flex items-center mb-4'>
         <h2 className='text-lg font-bold text-gray-900'>The fellas 💪🏾🔥</h2>
       </div>
-      <div className='flex-1 overflow-y-scroll'>
+      <div className='flex-1 max-h-[calc(100%-100px)] overflow-y-scroll' ref={messagesContainerRef}>
         {messages.map((message: textMessagesProps, index) => {
           if (message.user === auth?.currentUser?.uid) {
             return <SendTextBubble key={index} message={message.text} />
@@ -73,10 +80,11 @@ const ChatConversations = ({ room }) => {
           }
         })}
       </div>
-      <div className='bottom-2 fixed z-10'>
-        <form className='flex items-center mt-4 px-0 mx-0'>
+      <div ref={messagesContainerRef}></div> {/* added a dummy div for auto-scrolling */}
+      <div className='flex'>
+        <form className='flex items-center mt-4 px-0 mx-0 flex-grow'>
           <input
-            className='flex-1 rounded-full py-2 px-4 border-gray-400 border mr-4 w-full'
+            className='flex-grow rounded-full py-2 px-4 border-gray-400 border mr-4'
             type='text'
             placeholder='Type your message here...'
             ref={messageInputRef}
