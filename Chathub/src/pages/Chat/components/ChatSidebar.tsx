@@ -1,11 +1,20 @@
 import { useRef, useState } from 'react'
 import UIModal from '../../../components/ui/UIModal'
+import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from 'firebase/firestore'
+import { db, auth } from '../../../config/firebase'
+import { v4 as uuidv4 } from 'uuid'
+import { getRandomAvatarUrl } from '../../../utils/helpers'
+import { useAuth } from '../../../hooks/AuthContext'
 
 const ChatSidebar = () => {
+  const { currentUser } = useAuth()
+
   const [showModal, setShowModal] = useState(false)
   const [showNewGroupModal, setShowNewGroupModal] = useState(false)
   const insertedCode = useRef(null)
   const insertedGroupName = useRef(null)
+
+  const messagesRef = collection(db, 'Chats')
 
   const handleCodeInput = (event) => {
     insertedCode.current = event.target.value
@@ -19,8 +28,19 @@ const ChatSidebar = () => {
     console.log('Add user to chat')
   }
 
-  const handleChatCreation = () => {
-    console.log('Create new chat code')
+  const handleChatCreation = async () => {
+    if (!insertedGroupName.current == null) return
+
+    await addDoc(messagesRef, {
+      id: uuidv4(),
+      createdAt: serverTimestamp(),
+      chatName: insertedGroupName.current,
+      chatImageUrl: getRandomAvatarUrl(),
+      members: [currentUser?.uid]
+    })
+
+    setShowNewGroupModal(false)
+    insertedGroupName.current = null
   }
 
   return (
