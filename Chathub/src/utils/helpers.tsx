@@ -13,3 +13,13 @@ export function getRandomInt(max: number): number {
 export function getRandomAvatarUrl(): string {
   return avatarArray[getRandomInt(12)]
 }
+
+export function generateSixDigitCode() {
+  const code = Math.floor(Math.random() * 1000000)
+  return code.toString().padStart(6, '0')
+}
+
+export function generateFourDigitPin() {
+  const pin = Math.floor(Math.random() * 10000)
+  return pin.toString().padStart(4, '0')
+}

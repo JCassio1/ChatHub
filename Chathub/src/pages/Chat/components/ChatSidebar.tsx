@@ -1,20 +1,56 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import UIModal from '../../../components/ui/UIModal'
 import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../../config/firebase'
 import { v4 as uuidv4 } from 'uuid'
-import { getRandomAvatarUrl } from '../../../utils/helpers'
+import { generateFourDigitPin, generateSixDigitCode, getRandomAvatarUrl } from '../../../utils/helpers'
 import { useAuth } from '../../../hooks/AuthContext'
+import { chatsProps } from '../../../Model/data-structures'
+import ChatSidebarItem from './ChatSidebarItem'
 
 const ChatSidebar = () => {
   const { currentUser } = useAuth()
+
+  const [chats, setChats] = useState<chatsProps[]>([])
 
   const [showModal, setShowModal] = useState(false)
   const [showNewGroupModal, setShowNewGroupModal] = useState(false)
   const insertedCode = useRef(null)
   const insertedGroupName = useRef(null)
 
-  const messagesRef = collection(db, 'Chats')
+  const chatsRef = collection(db, 'Chats')
+
+  const isChatsEmpty = !chats || chats.length === 0
+
+  const userChats = isChatsEmpty ? (
+    <p>No chats. Join or create a new one</p>
+  ) : (
+    chats.map((chat) => (
+      <ChatSidebarItem
+        key={chat.id}
+        chatName={chat.chatName}
+        lastMessage='Change me'
+        chatAvatarUrl={chat.chatImageUrl}
+      />
+    ))
+  )
+
+  useEffect(() => {
+    const queryChats = query(chatsRef, where('members', 'array-contains', currentUser?.uid), orderBy('createdAt'))
+    const unsubscribe = onSnapshot(queryChats, (snapshot) => {
+      let chats: chatsProps[] = []
+
+      snapshot.forEach((doc) => {
+        chats.push({
+          ...doc.data()
+        })
+      })
+
+      setChats(chats)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   const handleCodeInput = (event) => {
     insertedCode.current = event.target.value
@@ -31,11 +67,13 @@ const ChatSidebar = () => {
   const handleChatCreation = async () => {
     if (!insertedGroupName.current == null) return
 
-    await addDoc(messagesRef, {
+    await addDoc(chatsRef, {
       id: uuidv4(),
       createdAt: serverTimestamp(),
       chatName: insertedGroupName.current,
       chatImageUrl: getRandomAvatarUrl(),
+      chatReference: generateSixDigitCode(),
+      chatPincode: generateFourDigitPin(),
       members: [currentUser?.uid]
     })
 
@@ -81,34 +119,7 @@ const ChatSidebar = () => {
       </div>
       <h2 className='text-lg font-bold mb-4'>Chats</h2>
       <div style={{ height: 'calc(100% - 136px)', overflowY: 'scroll' }}>
-        <ul className='list-none p-0'>
-          <li className='mb-2 cursor-pointer'>
-            <div className='flex items-center'>
-              <img
-                className='h-10 w-10 rounded-full object-cover mr-2'
-                src='https://api.dicebear.com/6.x/avataaars-neutral/svg?seed=Samantha'
-                alt='avatar'
-              />
-              <div>
-                <h3 className='text-gray-900 font-bold'>Hubchat</h3>
-                <p className='text-gray-600'>Hey there, how are you?</p>
-              </div>
-            </div>
-          </li>
-          <li className='mb-2 cursor-pointer'>
-            <div className='flex items-center'>
-              <img
-                className='h-10 w-10 rounded-full object-cover mr-2'
-                src='https://api.dicebear.com/6.x/avataaars-neutral/svg?seed=Bella'
-                alt='avatar'
-              />
-              <div>
-                <h3 className='text-gray-900 font-bold'>The fellas 💪🏾🔥</h3>
-                <p className='text-gray-600'>What are you up to this weekend?</p>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <ul className='list-none p-0'>{userChats}</ul>
       </div>
     </div>
   )

@@ -85,3 +85,18 @@ interface textMessagesPropsRead {
 }
 
 export type snapshotMessageProps = textMessagesProps & { id: string }
+
+export interface chatsProps {
+  chatImageUrl: string
+  chatName: string
+  chatPincode: string
+  createdAt: Timestamp
+  id: string
+  members: string
+}
+
+export interface sidebarChatProps {
+  chatName: string
+  lastMessage: string
+  chatAvatarUrl: string
+}
