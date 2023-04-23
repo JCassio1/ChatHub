@@ -1,6 +1,6 @@
 import { UIModalProps } from '../../Model/data-structures'
 
-const UIModal = ({ isOpen, onClose, title, body, buttonText, handleModalClick }: UIModalProps) => {
+const UIModal = ({ isOpen, onClose, title, body, buttonText, isButtonDisabled, handleModalClick }: UIModalProps) => {
   const handleClose = () => {
     onClose()
   }
@@ -25,7 +25,10 @@ const UIModal = ({ isOpen, onClose, title, body, buttonText, handleModalClick }:
               {/* Footer */}
               <div className='flex justify-center items-center px-5 py-3 border-t jus border-gray-300'>
                 <button
-                  className='px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-800 focus:outline-none focus:shadow-outline-blue active:bg-blue-600'
+                  disabled={isButtonDisabled}
+                  className={`px-4 py-2 font-semibold text-white ${
+                    isButtonDisabled ? 'bg-gray-300' : 'bg-indigo-600'
+                  } rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-600`}
                   onClick={handleModalClick}
                 >
                   {buttonText}

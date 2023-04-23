@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import UIModal from '../../../components/ui/UIModal'
-import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from 'firebase/firestore'
+import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy, updateDoc } from 'firebase/firestore'
 import { db, auth } from '../../../config/firebase'
 import { v4 as uuidv4 } from 'uuid'
 import { generateFourDigitPin, generateSixDigitCode, getRandomAvatarUrl } from '../../../utils/helpers'
@@ -15,12 +15,17 @@ const ChatSidebar = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [showNewGroupModal, setShowNewGroupModal] = useState(false)
-  const insertedCode = useRef(null)
-  const insertedGroupName = useRef(null)
+  const [insertedCode, setInsertedCode] = useState('')
+  const [insertedReference, setInsertedReference] = useState('')
+  const [insertedGroupName, setInsertedGroupName] = useState('')
 
   const chatsRef = collection(db, 'Chats')
 
   const isChatsEmpty = !chats || chats.length === 0
+
+  const isJoinButtonDisabled = insertedReference === '' || insertedCode === ''
+
+  const isCreateButtonDisabled = insertedGroupName === ''
 
   const userChats = isChatsEmpty ? (
     <p>No chats. Join or create a new one</p>
@@ -52,25 +57,61 @@ const ChatSidebar = () => {
     return () => unsubscribe()
   }, [])
 
-  const handleCodeInput = (event) => {
-    insertedCode.current = event.target.value
+  const handlePincodeInput = (event) => {
+    setInsertedCode(event.target.value)
+  }
+
+  const handleReferenceInput = (event) => {
+    setInsertedReference(event.target.value)
   }
 
   const handleChatNameInput = (event) => {
-    insertedGroupName.current = event.target.value
+    setInsertedGroupName(event.target.value)
   }
 
-  const handleModalClick = () => {
-    console.log('Add user to chat')
+  const handleJoiningChat = () => {
+    const queryChats = query(
+      chatsRef,
+      where('chatReference', '==', insertedReference),
+      where('chatPincode', '==', insertedCode)
+    )
+
+    const unsubscribe = onSnapshot(queryChats, (snapshot) => {
+      if (snapshot.empty) {
+        console.log('No matches found!')
+        return
+      }
+
+      const doc = snapshot.docs[0]
+      const chatRef = doc.ref
+      const oldMembers = doc.data().members || []
+      const isUserAlreadyMember = oldMembers.includes(currentUser?.uid)
+
+      if (isUserAlreadyMember) {
+        return
+      }
+
+      const newMembers = [...oldMembers, currentUser?.uid]
+
+      updateDoc(chatRef, { members: newMembers }).catch((error) => {
+        console.error(error)
+      })
+
+      unsubscribe()
+    })
+
+    setInsertedReference('')
+    setInsertedCode('')
+    setShowModal(false)
   }
 
   const handleChatCreation = async () => {
-    if (!insertedGroupName.current == null) return
+    if (isCreateButtonDisabled) return
 
     await addDoc(chatsRef, {
       id: uuidv4(),
       createdAt: serverTimestamp(),
-      chatName: insertedGroupName.current,
+      chatName: insertedGroupName,
       chatImageUrl: getRandomAvatarUrl(),
       chatReference: generateSixDigitCode(),
       chatPincode: generateFourDigitPin(),
@@ -78,7 +119,7 @@ const ChatSidebar = () => {
     })
 
     setShowNewGroupModal(false)
-    insertedGroupName.current = null
+    setInsertedGroupName('')
   }
 
   return (
@@ -87,14 +128,21 @@ const ChatSidebar = () => {
         isOpen={showModal}
         title={'Chatroom code'}
         onClose={() => setShowModal((prev) => !prev)}
-        body={<input type='text' placeholder='Enter code' onChange={handleCodeInput} />}
+        isButtonDisabled={isJoinButtonDisabled}
+        body={
+          <div>
+            <input className='pb-3' type='text' placeholder='Reference number' onChange={handleReferenceInput} /> <hr />{' '}
+            <input className='pt-3' type='text' placeholder='Pin code' onChange={handlePincodeInput} />
+          </div>
+        }
         buttonText={'Join Chat'}
-        handleModalClick={handleModalClick}
+        handleModalClick={handleJoiningChat}
       />
 
       <UIModal
         isOpen={showNewGroupModal}
         title={'New chat'}
+        isButtonDisabled={isCreateButtonDisabled}
         onClose={() => setShowNewGroupModal((prev) => !prev)}
         body={<input type='text' placeholder='Enter chat name' onChange={handleChatNameInput} />}
         buttonText={'Create chat'}

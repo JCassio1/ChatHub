@@ -53,6 +53,7 @@ export interface UIModalProps {
   title: string
   body: JSX.Element
   buttonText: string
+  isButtonDisabled: boolean
   handleModalClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
