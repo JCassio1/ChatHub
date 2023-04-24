@@ -5,10 +5,10 @@ import { db, auth } from '../../../config/firebase'
 import { v4 as uuidv4 } from 'uuid'
 import { generateFourDigitPin, generateSixDigitCode, getRandomAvatarUrl } from '../../../utils/helpers'
 import { useAuth } from '../../../hooks/AuthContext'
-import { chatsProps } from '../../../Model/data-structures'
+import { chatsProps, sideBarProps } from '../../../Model/data-structures'
 import ChatSidebarItem from './ChatSidebarItem'
 
-const ChatSidebar = () => {
+const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   const { currentUser } = useAuth()
 
   const [chats, setChats] = useState<chatsProps[]>([])
@@ -27,15 +27,21 @@ const ChatSidebar = () => {
 
   const isCreateButtonDisabled = insertedGroupName === ''
 
+  const handleChatSelection = (chatId: string) => {
+    handleChatClick(chatId)
+  }
+
   const userChats = isChatsEmpty ? (
     <p>No chats. Join or create a new one</p>
   ) : (
     chats.map((chat) => (
       <ChatSidebarItem
         key={chat.id}
+        chatId={chat.id}
         chatName={chat.chatName}
         lastMessage='Change me'
         chatAvatarUrl={chat.chatImageUrl}
+        clickHandler={handleChatSelection}
       />
     ))
   )
@@ -57,15 +63,15 @@ const ChatSidebar = () => {
     return () => unsubscribe()
   }, [])
 
-  const handlePincodeInput = (event) => {
+  const handlePincodeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInsertedCode(event.target.value)
   }
 
-  const handleReferenceInput = (event) => {
+  const handleReferenceInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInsertedReference(event.target.value)
   }
 
-  const handleChatNameInput = (event) => {
+  const handleChatNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInsertedGroupName(event.target.value)
   }
 

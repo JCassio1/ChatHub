@@ -3,39 +3,18 @@ import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy 
 import { db, auth } from '../../../config/firebase'
 import SendTextBubble from './SendTextBubble'
 import ReceiveTextBubble from './ReceiveTextBubble'
-import { snapshotMessageProps, textMessagesProps } from '../../../Model/data-structures'
+import { ChatConversationsProps, snapshotMessageProps, textMessagesProps } from '../../../Model/data-structures'
 
-const ChatConversations = ({ room }) => {
+const ChatConversations = ({ roomData, chatId }: ChatConversationsProps) => {
   const messageInputRef = useRef<HTMLInputElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  const [messages, setMessages] = useState<snapshotMessageProps[]>([])
-
   const messagesRef = collection(db, 'Messages')
-
   const [isMessageEmpty, setIsMessageEmpty] = useState(true)
 
-  useEffect(() => {
-    const queryMessages = query(messagesRef, where('room', '==', 'Gobby'), orderBy('createdAt'))
-    const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
-      let messages: snapshotMessageProps[] = []
-      snapshot.forEach((doc) => {
-        messages.push({
-          ...doc.data(),
-          id: doc.id
-        })
-      })
-      setMessages(messages)
-
-      // scroll to the bottom of the messages container
-      messagesContainerRef.current?.scrollTo({
-        top: messagesContainerRef.current?.scrollHeight,
-        behavior: 'smooth'
-      })
-    })
-
-    return () => unsubscribe()
-  }, [])
+  if (roomData === null) {
+    return <p>No chat selected</p>
+  }
 
   const handleInputValidity = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsMessageEmpty(!event.target.value || event.target.value.trim() === '')
@@ -52,7 +31,7 @@ const ChatConversations = ({ room }) => {
       user: auth?.currentUser?.uid,
       avatarUrl: auth?.currentUser?.photoURL,
       userDisplayName: auth?.currentUser?.displayName,
-      room: 'Gobby'
+      room: chatId
     })
 
     messageInputRef.current!.value = ''
@@ -65,7 +44,7 @@ const ChatConversations = ({ room }) => {
         <h2 className='text-lg font-bold text-gray-900'>The fellas 💪🏾🔥</h2>
       </div>
       <div className='flex-1 max-h-[calc(100%-100px)] overflow-y-scroll' ref={messagesContainerRef}>
-        {messages.map((message: textMessagesProps, index) => {
+        {roomData.map((message: textMessagesProps, index) => {
           if (message.user === auth?.currentUser?.uid) {
             return <SendTextBubble key={index} message={message.text} />
           } else {

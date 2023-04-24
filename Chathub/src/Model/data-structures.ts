@@ -85,7 +85,7 @@ interface textMessagesPropsRead {
   userDisplayName?: string
 }
 
-export type snapshotMessageProps = textMessagesProps & { id: string }
+export type snapshotMessageProps = textMessagesProps & { id?: string }
 
 export interface chatsProps {
   chatImageUrl: string
@@ -100,4 +100,19 @@ export interface sidebarChatProps {
   chatName: string
   lastMessage: string
   chatAvatarUrl: string
+  chatId: string
+  clickHandler: (arg0: string) => void
+}
+
+export interface sideBarProps {
+  handleChatClick: (arg0: string) => void
+}
+
+export interface chatComponentProps {
+  roomId: string | null
+}
+
+export interface ChatConversationsProps {
+  roomData: textMessagesProps[]
+  chatId: string | null
 }
