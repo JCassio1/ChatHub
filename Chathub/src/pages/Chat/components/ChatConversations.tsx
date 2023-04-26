@@ -12,10 +12,6 @@ const ChatConversations = ({ roomData, chatId, chatname }: ChatConversationsProp
   const messagesRef = collection(db, 'Messages')
   const [isMessageEmpty, setIsMessageEmpty] = useState(true)
 
-  if (roomData === null) {
-    return <p>No chat selected</p>
-  }
-
   const handleInputValidity = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsMessageEmpty(!event.target.value || event.target.value.trim() === '')
   }
@@ -38,6 +34,34 @@ const ChatConversations = ({ roomData, chatId, chatname }: ChatConversationsProp
     setIsMessageEmpty(true)
   }
 
+  const messagebody =
+    roomData && roomData.length === 0 ? (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p style={{ textAlign: 'center' }}>No chat selected</p>
+      </div>
+    ) : (
+      <div className='flex'>
+        <form className='flex items-center mt-4 px-0 mx-0 flex-grow'>
+          <input
+            className='flex-grow rounded-full py-2 px-4 border-gray-400 border mr-4'
+            type='text'
+            placeholder='Type your message here...'
+            ref={messageInputRef}
+            onChange={handleInputValidity}
+          />
+          <button
+            onClick={handleMessageSubmit}
+            disabled={isMessageEmpty}
+            className={`${isMessageEmpty ? 'bg-gray-700' : 'bg-indigo-600'} text-white rounded-full py-2 px-4 ${
+              !isMessageEmpty && 'hover:bg-indigo-800'
+            } transition-colors`}
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    )
+
   return (
     <div className='flex-1 h-full bg-white p-4'>
       <div className='flex items-center mb-4'>
@@ -59,27 +83,8 @@ const ChatConversations = ({ roomData, chatId, chatname }: ChatConversationsProp
           }
         })}
       </div>
-      <div ref={messagesContainerRef}></div> {/* added a dummy div for auto-scrolling */}
-      <div className='flex'>
-        <form className='flex items-center mt-4 px-0 mx-0 flex-grow'>
-          <input
-            className='flex-grow rounded-full py-2 px-4 border-gray-400 border mr-4'
-            type='text'
-            placeholder='Type your message here...'
-            ref={messageInputRef}
-            onChange={handleInputValidity}
-          />
-          <button
-            onClick={handleMessageSubmit}
-            disabled={isMessageEmpty}
-            className={`${isMessageEmpty ? 'bg-gray-700' : 'bg-indigo-600'} text-white rounded-full py-2 px-4 ${
-              !isMessageEmpty && 'hover:bg-indigo-800'
-            } transition-colors`}
-          >
-            Send
-          </button>
-        </form>
-      </div>
+
+      {messagebody}
     </div>
   )
 }
