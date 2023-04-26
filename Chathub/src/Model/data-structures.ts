@@ -44,7 +44,7 @@ export interface alertBanner {
 }
 
 export interface PrivateRouteProps {
-  element: ReactNode
+  element: JSX.Element
 }
 
 export interface UIModalProps {
