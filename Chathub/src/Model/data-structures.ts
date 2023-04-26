@@ -115,4 +115,5 @@ export interface chatComponentProps {
 export interface ChatConversationsProps {
   roomData: textMessagesProps[]
   chatId: string | null
+  chatname: string | null
 }

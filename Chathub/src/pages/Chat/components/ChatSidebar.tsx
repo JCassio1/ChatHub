@@ -84,7 +84,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
 
     const unsubscribe = onSnapshot(queryChats, (snapshot) => {
       if (snapshot.empty) {
-        console.log('No matches found!')
+        console.error('No matches found!')
         return
       }
 

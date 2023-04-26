@@ -5,7 +5,7 @@ import SendTextBubble from './SendTextBubble'
 import ReceiveTextBubble from './ReceiveTextBubble'
 import { ChatConversationsProps, snapshotMessageProps, textMessagesProps } from '../../../Model/data-structures'
 
-const ChatConversations = ({ roomData, chatId }: ChatConversationsProps) => {
+const ChatConversations = ({ roomData, chatId, chatname }: ChatConversationsProps) => {
   const messageInputRef = useRef<HTMLInputElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
@@ -41,7 +41,7 @@ const ChatConversations = ({ roomData, chatId }: ChatConversationsProps) => {
   return (
     <div className='flex-1 h-full bg-white p-4'>
       <div className='flex items-center mb-4'>
-        <h2 className='text-lg font-bold text-gray-900'>The fellas 💪🏾🔥</h2>
+        <h2 className='text-lg font-bold text-gray-900'>{chatname}</h2>
       </div>
       <div className='flex-1 max-h-[calc(100%-100px)] overflow-y-scroll' ref={messagesContainerRef}>
         {roomData.map((message: textMessagesProps, index) => {
