@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import UIModal from '../../../components/ui/UIModal'
-import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy, updateDoc } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
+  updateDoc,
+  limitToLast,
+  getDocs
+} from 'firebase/firestore'
 import { db, auth } from '../../../config/firebase'
 import { v4 as uuidv4 } from 'uuid'
 import { generateFourDigitPin, generateSixDigitCode, getRandomAvatarUrl } from '../../../utils/helpers'
@@ -12,6 +23,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   const { currentUser } = useAuth()
 
   const [chats, setChats] = useState<chatsProps[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const [showModal, setShowModal] = useState(false)
   const [showNewGroupModal, setShowNewGroupModal] = useState(false)
@@ -20,8 +32,9 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   const [insertedGroupName, setInsertedGroupName] = useState('')
 
   const chatsRef = collection(db, 'Chats')
+  const messagesRef = collection(db, 'Messages')
 
-  const isChatsEmpty = !chats || chats.length === 0
+  const isChatsEmpty = chats.length === 0
 
   const isJoinButtonDisabled = insertedReference === '' || insertedCode === ''
 
@@ -32,14 +45,18 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   }
 
   const userChats = isChatsEmpty ? (
-    <p>No chats. Join or create a new one</p>
+    isLoading ? (
+      <p>Loading....</p>
+    ) : (
+      <p>No chats. Join or create a new one</p>
+    )
   ) : (
     chats.map((chat) => (
       <ChatSidebarItem
         key={chat.id}
         chatId={chat.id}
         chatName={chat.chatName}
-        lastMessage='Change me'
+        lastMessage={chat.lastSentMessage}
         chatAvatarUrl={chat.chatImageUrl}
         clickHandler={handleChatSelection}
       />
@@ -48,19 +65,45 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
 
   useEffect(() => {
     const queryChats = query(chatsRef, where('members', 'array-contains', currentUser?.uid), orderBy('createdAt'))
-    const unsubscribe = onSnapshot(queryChats, (snapshot) => {
-      let chats: chatsProps[] = []
+    const chatUnsubscribeFns: (() => void)[] = []
 
-      snapshot.forEach((doc) => {
-        chats.push({
-          ...doc.data()
-        })
-      })
+    const unsubscribe = onSnapshot(queryChats, async (snapshot) => {
+      const chats: chatsProps[] = []
+
+      for (const doc of snapshot.docs) {
+        const chatIdToSearch = doc.data().id
+        const queryLastMessage = query(
+          messagesRef,
+          where('room', '==', chatIdToSearch),
+          orderBy('createdAt'),
+          limitToLast(1)
+        )
+
+        try {
+          const searchSnapshot = await getDocs(queryLastMessage)
+          let lastMessage = null
+
+          searchSnapshot.forEach((doc) => {
+            lastMessage = doc.data().text
+          })
+
+          chats.push({
+            ...doc.data(),
+            lastSentMessage: lastMessage
+          })
+        } catch (error) {
+          console.log('Error fetching last message:', error)
+        }
+      }
 
       setChats(chats)
+      setIsLoading(false)
     })
 
-    return () => unsubscribe()
+    return () => {
+      chatUnsubscribeFns.forEach((unsubscribeFn) => unsubscribeFn())
+      unsubscribe()
+    }
   }, [])
 
   const handlePincodeInput = (event: React.ChangeEvent<HTMLInputElement>) => {

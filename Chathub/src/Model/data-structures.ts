@@ -94,11 +94,12 @@ export interface chatsProps {
   createdAt: Timestamp
   id: string
   members: string
+  lastSentMessage: string | null
 }
 
 export interface sidebarChatProps {
   chatName: string
-  lastMessage: string
+  lastMessage: string | null
   chatAvatarUrl: string
   chatId: string
   clickHandler: (arg0: string) => void

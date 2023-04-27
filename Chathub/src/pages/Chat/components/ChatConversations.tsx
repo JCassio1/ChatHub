@@ -35,7 +35,7 @@ const ChatConversations = ({ roomData, chatId, chatname }: ChatConversationsProp
   }
 
   const messagebody =
-    roomData && roomData.length === 0 ? (
+    chatname == null ? (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <p style={{ textAlign: 'center' }}>No chat selected</p>
       </div>
