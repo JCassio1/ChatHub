@@ -12,7 +12,7 @@ const ChatRoom = () => {
 
   return (
     <section>
-      <div className='flex flex-row h-screen'>
+      <div className='flex' style={{ height: `calc(100vh - 64px)` }}>
         <ChatSidebar handleChatClick={(chatId) => handleSelectedChat(chatId)} />
         <ChatComponent roomId={chatRoom} />
       </div>
