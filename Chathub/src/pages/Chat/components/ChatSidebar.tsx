@@ -97,8 +97,14 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
           })
 
           chats.push({
-            ...doc.data(),
-            lastSentMessage: lastMessage
+            chatImageUrl: doc.data().chatImageUrl,
+            chatName: doc.data().chatName,
+            chatPincode: doc.data().chatPincode,
+            createdAt: doc.data().createdAt,
+            id: doc.data().id,
+            members: doc.data().members,
+            lastSentMessage: lastMessage,
+            chatReference: doc.data().chatReference
           })
         } catch (error) {
           toast.error('Error fetching messages. Please try again later.')
