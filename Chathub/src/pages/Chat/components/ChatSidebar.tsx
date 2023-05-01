@@ -18,12 +18,14 @@ import { generateFourDigitPin, generateSixDigitCode, getRandomAvatarUrl } from '
 import { useAuth } from '../../../hooks/AuthContext'
 import { chatsProps, sideBarProps } from '../../../Model/data-structures'
 import ChatSidebarItem from './ChatSidebarItem'
+import toast, { Toaster } from 'react-hot-toast'
 
 const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   const { currentUser } = useAuth()
 
   const [chats, setChats] = useState<chatsProps[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [saidHello, setSaidHello] = useState(false)
 
   const [showModal, setShowModal] = useState(false)
   const [showNewGroupModal, setShowNewGroupModal] = useState(false)
@@ -59,6 +61,8 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
         lastMessage={chat.lastSentMessage}
         chatAvatarUrl={chat.chatImageUrl}
         clickHandler={handleChatSelection}
+        chatRef={chat.chatReference}
+        chatPin={chat.chatPincode}
       />
     ))
   )
@@ -69,6 +73,11 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
 
     const unsubscribe = onSnapshot(queryChats, async (snapshot) => {
       const chats: chatsProps[] = []
+
+      if (!saidHello) {
+        toast(`Hello ${currentUser ? currentUser?.displayName : 'You!'} 👋`)
+        setSaidHello(true)
+      }
 
       for (const doc of snapshot.docs) {
         const chatIdToSearch = doc.data().id
@@ -92,7 +101,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
             lastSentMessage: lastMessage
           })
         } catch (error) {
-          console.log('Error fetching last message:', error)
+          toast.error('Error fetching messages. Please try again later.')
         }
       }
 
@@ -127,7 +136,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
 
     const unsubscribe = onSnapshot(queryChats, (snapshot) => {
       if (snapshot.empty) {
-        console.error('No matches found!')
+        toast.error('Unable to join group. It no longer exists or the credentials are incorrect')
         return
       }
 
@@ -143,7 +152,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
       const newMembers = [...oldMembers, currentUser?.uid]
 
       updateDoc(chatRef, { members: newMembers }).catch((error) => {
-        console.error(error)
+        toast.error('Unable to join group. Please try again later.')
       })
 
       unsubscribe()
@@ -172,53 +181,56 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   }
 
   return (
-    <div className='flex-3 h-full bg-gray-100 p-4'>
-      <UIModal
-        isOpen={showModal}
-        title={'Chatroom code'}
-        onClose={() => setShowModal((prev) => !prev)}
-        isButtonDisabled={isJoinButtonDisabled}
-        body={
-          <div>
-            <input className='pb-3' type='text' placeholder='Reference number' onChange={handleReferenceInput} /> <hr />{' '}
-            <input className='pt-3' type='text' placeholder='Pin code' onChange={handlePincodeInput} />
-          </div>
-        }
-        buttonText={'Join Chat'}
-        handleModalClick={handleJoiningChat}
-      />
+    <>
+      <Toaster />
+      <div className='flex-3 h-full bg-gray-100 p-4'>
+        <UIModal
+          isOpen={showModal}
+          title={'Chatroom code'}
+          onClose={() => setShowModal((prev) => !prev)}
+          isButtonDisabled={isJoinButtonDisabled}
+          body={
+            <div>
+              <input className='pb-3' type='text' placeholder='Reference number' onChange={handleReferenceInput} />{' '}
+              <hr /> <input className='pt-3' type='text' placeholder='Pin code' onChange={handlePincodeInput} />
+            </div>
+          }
+          buttonText={'Join Chat'}
+          handleModalClick={handleJoiningChat}
+        />
 
-      <UIModal
-        isOpen={showNewGroupModal}
-        title={'New chat'}
-        isButtonDisabled={isCreateButtonDisabled}
-        onClose={() => setShowNewGroupModal((prev) => !prev)}
-        body={<input type='text' placeholder='Enter chat name' onChange={handleChatNameInput} />}
-        buttonText={'Create chat'}
-        handleModalClick={handleChatCreation}
-      />
+        <UIModal
+          isOpen={showNewGroupModal}
+          title={'New chat'}
+          isButtonDisabled={isCreateButtonDisabled}
+          onClose={() => setShowNewGroupModal((prev) => !prev)}
+          body={<input type='text' placeholder='Enter chat name' onChange={handleChatNameInput} />}
+          buttonText={'Create chat'}
+          handleModalClick={handleChatCreation}
+        />
 
-      <div className='flex justify-center'>
-        <button
-          type='button'
-          className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
-          onClick={() => setShowModal((prev) => !prev)}
-        >
-          + Join Chat
-        </button>
-        <button
-          type='button'
-          className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
-          onClick={() => setShowNewGroupModal((prev) => !prev)}
-        >
-          + Create Group
-        </button>
+        <div className='flex justify-center'>
+          <button
+            type='button'
+            className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
+            onClick={() => setShowModal((prev) => !prev)}
+          >
+            + Join Chat
+          </button>
+          <button
+            type='button'
+            className='text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2'
+            onClick={() => setShowNewGroupModal((prev) => !prev)}
+          >
+            + Create Group
+          </button>
+        </div>
+        <h2 className='text-lg font-bold mb-4'>Chats</h2>
+        <div style={{ height: 'calc(100% - 136px)', overflowY: 'scroll' }}>
+          <ul className='list-none p-0'>{userChats}</ul>
+        </div>
       </div>
-      <h2 className='text-lg font-bold mb-4'>Chats</h2>
-      <div style={{ height: 'calc(100% - 136px)', overflowY: 'scroll' }}>
-        <ul className='list-none p-0'>{userChats}</ul>
-      </div>
-    </div>
+    </>
   )
 }
 

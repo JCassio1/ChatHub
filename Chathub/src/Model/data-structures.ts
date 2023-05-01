@@ -95,6 +95,7 @@ export interface chatsProps {
   id: string
   members: string
   lastSentMessage: string | null
+  chatReference: string
 }
 
 export interface sidebarChatProps {
@@ -102,6 +103,8 @@ export interface sidebarChatProps {
   lastMessage: string | null
   chatAvatarUrl: string
   chatId: string
+  chatRef: string
+  chatPin: string
   clickHandler: (arg0: string) => void
 }
 
