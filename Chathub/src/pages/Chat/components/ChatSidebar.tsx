@@ -74,7 +74,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
     const unsubscribe = onSnapshot(queryChats, async (snapshot) => {
       const chats: chatsProps[] = []
 
-      if (!saidHello) {
+      if (saidHello === false) {
         toast(`Hello ${currentUser ? currentUser?.displayName : 'You!'} 👋`)
         setSaidHello(true)
       }
@@ -119,7 +119,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
       chatUnsubscribeFns.forEach((unsubscribeFn) => unsubscribeFn())
       unsubscribe()
     }
-  }, [])
+  }, [saidHello])
 
   const handlePincodeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInsertedCode(event.target.value)
@@ -152,6 +152,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
       const isUserAlreadyMember = oldMembers.includes(currentUser?.uid)
 
       if (isUserAlreadyMember) {
+        toast.error('You are already a member')
         return
       }
 
@@ -172,15 +173,21 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
   const handleChatCreation = async () => {
     if (isCreateButtonDisabled) return
 
-    await addDoc(chatsRef, {
-      id: uuidv4(),
-      createdAt: serverTimestamp(),
-      chatName: insertedGroupName,
-      chatImageUrl: getRandomAvatarUrl(),
-      chatReference: generateSixDigitCode(),
-      chatPincode: generateFourDigitPin(),
-      members: [currentUser?.uid]
-    })
+    try {
+      await addDoc(chatsRef, {
+        id: uuidv4(),
+        createdAt: serverTimestamp(),
+        chatName: insertedGroupName,
+        chatImageUrl: getRandomAvatarUrl(),
+        chatReference: generateSixDigitCode(),
+        chatPincode: generateFourDigitPin(),
+        members: [currentUser?.uid]
+      })
+
+      toast.success(`${insertedGroupName} group chat created successfully`)
+    } catch (error) {
+      toast.error('Unable to create group. Please try again later.')
+    }
 
     setShowNewGroupModal(false)
     setInsertedGroupName('')
