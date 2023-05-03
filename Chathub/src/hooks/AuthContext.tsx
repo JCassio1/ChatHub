@@ -63,8 +63,8 @@ export const AuthProvider = ({ children }: Props) => {
     return auth.signOut()
   }
 
-  const updateProfileWithDisplayName = (user: User, displayName: string) => {
-    return updateProfile(user, {
+  const updateProfileWithDisplayName = (user: User | null, displayName: string) => {
+    return updateProfile(user!, {
       displayName: displayName,
       photoURL: getRandomAvatarUrl()
     })
