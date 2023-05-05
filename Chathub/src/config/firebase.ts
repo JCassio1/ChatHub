@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app'
 
 import { getAnalytics } from 'firebase/analytics'
 
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore'
 
 import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 
@@ -17,19 +17,19 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth'
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
+  apiKey: import.meta.env.VITE_apiKey,
 
-  projectId: process.env.PROJECT_ID,
+  authDomain: import.meta.env.VITE_authDomain,
 
-  authDomain: process.env.AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_projectId,
 
-  storageBucket: process.env.STORAGE_BUCKET,
+  storageBucket: import.meta.env.VITE_storageBucket,
 
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
 
-  appId: process.env.APP_APPID,
+  appId: import.meta.env.VITE_APP_appId,
 
-  measurementId: process.env.MEASUREMENT_ID
+  measurementId: import.meta.env.VITE_measurementId
 }
 
 // Initialize Firebase
