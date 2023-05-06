@@ -31,16 +31,18 @@ const Navbar = () => {
             <ul className='flex items-center gap-6 text-sm'>{MenuItemMap}</ul>
           </nav>
 
-          <div className='flex items-center gap-4'>
-            <div className='sm:flex sm:gap-4'>
+          <div className='flex items-center gap-4 '>
+            <div className='flex items-center gap-4 sm:flex-1 justify-center sm:justify-end'>
               <Link to='/auth?mode=login'>
-                <div className='block rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black hover:text-white transition hover:bg-blue-600'>
+                <div className='block rounded-md bg-white px-5 py-2.5 text-sm font-medium text-black hover:text-white transition hover:bg-blue-600 sm:text-base sm:py-3 sm:px-6'>
                   Login
                 </div>
               </Link>
 
               <Link to='/auth?mode=signup'>
-                <div className='block rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white'>Sign up</div>
+                <div className='block rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition sm:text-base sm:py-3 sm:px-6'>
+                  Sign up
+                </div>
               </Link>
             </div>
           </div>
