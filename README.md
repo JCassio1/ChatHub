@@ -38,6 +38,13 @@ Wireframes might differ from final result
   <img src="https://github.com/JCassio1/ChatHub/blob/main/App-assets/chathub-real-shot.png" />
 </p>
 
+## 🛠️ Technologies
+
+1. React
+2. Typescript
+3. Firebase
+4. Tailwind
+
 ## 🗺 Project Management
 
 ClickUp is used to manage implementation of project features (Kanban)
