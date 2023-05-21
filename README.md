@@ -4,6 +4,10 @@
 
 ChatHub is a real-time chat application built with React.
 
+## 🖥️ Demo
+
+[View Demo](https://chathub-six.vercel.app)
+
 ## ⚙️ Project Status 🛠️
 
 ```js
@@ -27,6 +31,19 @@ Chat page
 </p>
 
 Wireframes might differ from final result
+
+## 📸 App Shots
+
+<p align="center">
+  <img src="https://github.com/JCassio1/ChatHub/blob/main/App-assets/chathub-real-shot.png" />
+</p>
+
+## 🛠️ Technologies
+
+1. React
+2. Typescript
+3. Firebase
+4. Tailwind
 
 ## 🗺 Project Management
 
