@@ -1,5 +1,6 @@
 import { Popover } from '@headlessui/react'
 import { sidebarChatProps } from '../../../Model/data-structures'
+import { trimLastMessage } from '../../../utils/helpers'
 
 const ChatSidebarItem = ({
   chatName,
@@ -16,7 +17,7 @@ const ChatSidebarItem = ({
         <img className='h-10 w-10 rounded-full object-cover mr-2' src={chatAvatarUrl} alt='avatar' />
         <div>
           <h3 className='text-gray-900 font-bold'>{chatName}</h3>
-          <p className='text-gray-600'>{lastMessage}</p>
+          <p className='text-gray-600'>{trimLastMessage(lastMessage)}</p>
         </div>
         <Popover className='ml-auto'>
           <Popover.Button className='p-1 rounded-full hover:bg-gray-200'>

@@ -23,3 +23,12 @@ export function generateFourDigitPin() {
   const pin = Math.floor(Math.random() * 10000)
   return pin.toString().padStart(4, '0')
 }
+
+export function trimLastMessage(message: string | null) {
+  if (message == null) return
+
+  if (message.trim().length > 20) {
+    return `${message.substring(0, 20)}...`
+  }
+  return message
+}
