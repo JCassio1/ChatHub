@@ -16,7 +16,7 @@ const LowerSection = () => {
             </h2>
 
             <p className='mt-4 text-gray-400'>
-              Simple, reliable, private messagingfor free, available all over the world.
+              Simple, reliable, private messaging for free, available all over the world.
             </p>
 
             <Link
