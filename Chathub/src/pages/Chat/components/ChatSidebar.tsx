@@ -75,7 +75,7 @@ const ChatSidebar = ({ handleChatClick }: sideBarProps) => {
       const chats: chatsProps[] = []
 
       if (saidHello === false) {
-        toast(`Hello ${currentUser ? currentUser?.displayName : 'You!'} 👋`)
+        toast(`Hello ${currentUser?.displayName ? currentUser.displayName : 'You!'} 👋`)
         setSaidHello(true)
       }
 
