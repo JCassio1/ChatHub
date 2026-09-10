@@ -8,13 +8,6 @@ ChatHub is a real-time chat application built with React.
 
 [View Demo](https://chathub-six.vercel.app)
 
-## ⚙️ Project Status 🛠️
-
-```js
-const project = {
-  status: 'In development'
-}
-```
 
 ## 🖌️ Wireframe
 
